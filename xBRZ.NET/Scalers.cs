@@ -2,7 +2,7 @@
 {
     public interface IScaler
     {
-        int Scale();
+        int Scale { get; }
         void BlendLineSteep(int col, OutputMatrix out_);
         void BlendLineSteepAndShallow(int col, OutputMatrix out_);
         void BlendLineShallow(int col, OutputMatrix out_);
@@ -39,23 +39,18 @@
 
     public class Scaler2x : ScalerBase, IScaler
     {
-        private static readonly int _scale = 2;
-
-        public int Scale()
-        {
-            return _scale;
-        }
+        public int Scale { get; } = 2;
 
         public void BlendLineShallow(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(_scale - 1, 0), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 1, 1), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 1, 0), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 1, 1), col);
         }
 
         public void BlendLineSteep(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(0, _scale - 1), col);
-            AlphaBlend(3, 4, out_.Ref(1, _scale - 1), col);
+            AlphaBlend(1, 4, out_.Ref(0, Scale - 1), col);
+            AlphaBlend(3, 4, out_.Ref(1, Scale - 1), col);
         }
 
         public void BlendLineSteepAndShallow(int col, OutputMatrix out_)
@@ -79,27 +74,22 @@
 
     public class Scaler3x : ScalerBase, IScaler
     {
-        private static readonly int _scale = 3;
-
-        public int Scale()
-        {
-            return _scale;
-        }
+        public int Scale { get; } = 3;
 
         public void BlendLineShallow(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(_scale - 1, 0), col);
-            AlphaBlend(1, 4, out_.Ref(_scale - 2, 2), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 1, 1), col);
-            out_.Ref(_scale - 1, 2).Set(col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 1, 0), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 2, 2), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 1, 1), col);
+            out_.Ref(Scale - 1, 2).Set(col);
         }
 
         public void BlendLineSteep(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(0, _scale - 1), col);
-            AlphaBlend(1, 4, out_.Ref(2, _scale - 2), col);
-            AlphaBlend(3, 4, out_.Ref(1, _scale - 1), col);
-            out_.Ref(2, _scale - 1).Set(col);
+            AlphaBlend(1, 4, out_.Ref(0, Scale - 1), col);
+            AlphaBlend(1, 4, out_.Ref(2, Scale - 2), col);
+            AlphaBlend(3, 4, out_.Ref(1, Scale - 1), col);
+            out_.Ref(2, Scale - 1).Set(col);
         }
 
         public void BlendLineSteepAndShallow(int col, OutputMatrix out_)
@@ -129,31 +119,26 @@
 
     public class Scaler4x : ScalerBase, IScaler
     {
-        private static readonly int _scale = 4;
-
-        public int Scale()
-        {
-            return _scale;
-        }
+        public int Scale { get; } = 4;
 
         public void BlendLineShallow(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(_scale - 1, 0), col);
-            AlphaBlend(1, 4, out_.Ref(_scale - 2, 2), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 1, 1), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 2, 3), col);
-            out_.Ref(_scale - 1, 2).Set(col);
-            out_.Ref(_scale - 1, 3).Set(col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 1, 0), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 2, 2), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 1, 1), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 2, 3), col);
+            out_.Ref(Scale - 1, 2).Set(col);
+            out_.Ref(Scale - 1, 3).Set(col);
         }
 
         public void BlendLineSteep(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(0, _scale - 1), col);
-            AlphaBlend(1, 4, out_.Ref(2, _scale - 2), col);
-            AlphaBlend(3, 4, out_.Ref(1, _scale - 1), col);
-            AlphaBlend(3, 4, out_.Ref(3, _scale - 2), col);
-            out_.Ref(2, _scale - 1).Set(col);
-            out_.Ref(3, _scale - 1).Set(col);
+            AlphaBlend(1, 4, out_.Ref(0, Scale - 1), col);
+            AlphaBlend(1, 4, out_.Ref(2, Scale - 2), col);
+            AlphaBlend(3, 4, out_.Ref(1, Scale - 1), col);
+            AlphaBlend(3, 4, out_.Ref(3, Scale - 2), col);
+            out_.Ref(2, Scale - 1).Set(col);
+            out_.Ref(3, Scale - 1).Set(col);
         }
 
         public void BlendLineSteepAndShallow(int col, OutputMatrix out_)
@@ -170,9 +155,9 @@
 
         public void BlendLineDiagonal(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 2, out_.Ref(_scale - 1, _scale / 2), col);
-            AlphaBlend(1, 2, out_.Ref(_scale - 2, _scale / 2 + 1), col);
-            out_.Ref(_scale - 1, _scale - 1).Set(col);
+            AlphaBlend(1, 2, out_.Ref(Scale - 1, Scale / 2), col);
+            AlphaBlend(1, 2, out_.Ref(Scale - 2, Scale / 2 + 1), col);
+            out_.Ref(Scale - 1, Scale - 1).Set(col);
         }
 
         public void BlendCorner(int col, OutputMatrix out_)
@@ -186,60 +171,55 @@
 
     public class Scaler5x : ScalerBase, IScaler
     {
-        private static readonly int _scale = 5;
-
-        public int Scale()
-        {
-            return _scale;
-        }
+        public int Scale { get; } = 5;
 
         public void BlendLineShallow(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(_scale - 1, 0), col);
-            AlphaBlend(1, 4, out_.Ref(_scale - 2, 2), col);
-            AlphaBlend(1, 4, out_.Ref(_scale - 3, 4), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 1, 1), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 2, 3), col);
-            out_.Ref(_scale - 1, 2).Set(col);
-            out_.Ref(_scale - 1, 3).Set(col);
-            out_.Ref(_scale - 1, 4).Set(col);
-            out_.Ref(_scale - 2, 4).Set(col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 1, 0), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 2, 2), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 3, 4), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 1, 1), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 2, 3), col);
+            out_.Ref(Scale - 1, 2).Set(col);
+            out_.Ref(Scale - 1, 3).Set(col);
+            out_.Ref(Scale - 1, 4).Set(col);
+            out_.Ref(Scale - 2, 4).Set(col);
         }
 
         public void BlendLineSteep(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(0, _scale - 1), col);
-            AlphaBlend(1, 4, out_.Ref(2, _scale - 2), col);
-            AlphaBlend(1, 4, out_.Ref(4, _scale - 3), col);
-            AlphaBlend(3, 4, out_.Ref(1, _scale - 1), col);
-            AlphaBlend(3, 4, out_.Ref(3, _scale - 2), col);
-            out_.Ref(2, _scale - 1).Set(col);
-            out_.Ref(3, _scale - 1).Set(col);
-            out_.Ref(4, _scale - 1).Set(col);
-            out_.Ref(4, _scale - 2).Set(col);
+            AlphaBlend(1, 4, out_.Ref(0, Scale - 1), col);
+            AlphaBlend(1, 4, out_.Ref(2, Scale - 2), col);
+            AlphaBlend(1, 4, out_.Ref(4, Scale - 3), col);
+            AlphaBlend(3, 4, out_.Ref(1, Scale - 1), col);
+            AlphaBlend(3, 4, out_.Ref(3, Scale - 2), col);
+            out_.Ref(2, Scale - 1).Set(col);
+            out_.Ref(3, Scale - 1).Set(col);
+            out_.Ref(4, Scale - 1).Set(col);
+            out_.Ref(4, Scale - 2).Set(col);
         }
 
         public void BlendLineSteepAndShallow(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 4, out_.Ref(0, _scale - 1), col);
-            AlphaBlend(1, 4, out_.Ref(2, _scale - 2), col);
-            AlphaBlend(3, 4, out_.Ref(1, _scale - 1), col);
-            AlphaBlend(1, 4, out_.Ref(_scale - 1, 0), col);
-            AlphaBlend(1, 4, out_.Ref(_scale - 2, 2), col);
-            AlphaBlend(3, 4, out_.Ref(_scale - 1, 1), col);
-            out_.Ref(2, _scale - 1).Set(col);
-            out_.Ref(3, _scale - 1).Set(col);
-            out_.Ref(_scale - 1, 2).Set(col);
-            out_.Ref(_scale - 1, 3).Set(col);
-            out_.Ref(4, _scale - 1).Set(col);
+            AlphaBlend(1, 4, out_.Ref(0, Scale - 1), col);
+            AlphaBlend(1, 4, out_.Ref(2, Scale - 2), col);
+            AlphaBlend(3, 4, out_.Ref(1, Scale - 1), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 1, 0), col);
+            AlphaBlend(1, 4, out_.Ref(Scale - 2, 2), col);
+            AlphaBlend(3, 4, out_.Ref(Scale - 1, 1), col);
+            out_.Ref(2, Scale - 1).Set(col);
+            out_.Ref(3, Scale - 1).Set(col);
+            out_.Ref(Scale - 1, 2).Set(col);
+            out_.Ref(Scale - 1, 3).Set(col);
+            out_.Ref(4, Scale - 1).Set(col);
             AlphaBlend(2, 3, out_.Ref(3, 3), col);
         }
 
         public void BlendLineDiagonal(int col, OutputMatrix out_)
         {
-            AlphaBlend(1, 8, out_.Ref(_scale - 1, _scale / 2), col);
-            AlphaBlend(1, 8, out_.Ref(_scale - 2, _scale / 2 + 1), col);
-            AlphaBlend(1, 8, out_.Ref(_scale - 3, _scale / 2 + 2), col);
+            AlphaBlend(1, 8, out_.Ref(Scale - 1, Scale / 2), col);
+            AlphaBlend(1, 8, out_.Ref(Scale - 2, Scale / 2 + 1), col);
+            AlphaBlend(1, 8, out_.Ref(Scale - 3, Scale / 2 + 2), col);
             AlphaBlend(7, 8, out_.Ref(4, 3), col);
             AlphaBlend(7, 8, out_.Ref(3, 4), col);
             out_.Ref(4, 4).Set(col);

@@ -49,6 +49,8 @@ namespace xBRZ.NET
         {
             _scaleSize = scaleSize;
             _cfg = cfg;
+            _colorDistance = new ColorDist(_cfg);
+            _colorEqualizer = new ColorEq(_cfg);
             ScaleImageImpl(src, trg, srcWidth, srcHeight, yFirst, yLast);
         }
 
@@ -57,9 +59,8 @@ namespace xBRZ.NET
         private OutputMatrix _outputMatrix;
         private readonly BlendResult _blendResult = new BlendResult();
 
-        private IColorDist _preProcessCornersColorDist;
-        private IColorEq _scalePixelColorEq;
-        private IColorDist _scalePixelColorDist;
+        private ColorDist _colorDistance;
+        private ColorEq _colorEqualizer;
 
         //fill block with the given color
         private static void FillBlock(int[] trg, int trgi, int pitch, int col, int blockSize)
@@ -80,11 +81,11 @@ namespace xBRZ.NET
 
             if ((ker.f == ker.g && ker.j == ker.k) || (ker.f == ker.j && ker.g == ker.k)) return;
 
-            var dist = _preProcessCornersColorDist;
+            var dist = _colorDistance;
             
             var weight = 4;
-            var jg = dist._(ker.i, ker.f) + dist._(ker.f, ker.c) + dist._(ker.n, ker.k) + dist._(ker.k, ker.h) + weight * dist._(ker.j, ker.g);
-            var fk = dist._(ker.e, ker.j) + dist._(ker.j, ker.o) + dist._(ker.b, ker.g) + dist._(ker.g, ker.l) + weight * dist._(ker.f, ker.k);
+            var jg = dist.DistYCbCr(ker.i, ker.f) + dist.DistYCbCr(ker.f, ker.c) + dist.DistYCbCr(ker.n, ker.k) + dist.DistYCbCr(ker.k, ker.h) + weight * dist.DistYCbCr(ker.j, ker.g);
+            var fk = dist.DistYCbCr(ker.e, ker.j) + dist.DistYCbCr(ker.j, ker.o) + dist.DistYCbCr(ker.b, ker.g) + dist.DistYCbCr(ker.g, ker.l) + weight * dist.DistYCbCr(ker.f, ker.k);
 
             if (jg < fk)
             {
@@ -139,8 +140,8 @@ namespace xBRZ.NET
 
             if ((BlendType)BlendInfo.GetBottomR(blend) == BlendType.BLEND_NONE) return;
 
-            var eq = _scalePixelColorEq;
-            var dist = _scalePixelColorDist;
+            var eq = _colorEqualizer;
+            var dist = _colorDistance;
 
             bool doLineBlend;
 
@@ -151,16 +152,16 @@ namespace xBRZ.NET
             //make sure there is no second blending in an adjacent
             //rotation for this pixel: handles insular pixels, mario eyes
             //but support double-blending for 90� corners
-            else if (BlendInfo.GetTopR(blend) != (char)BlendType.BLEND_NONE && !eq._(e, g))
+            else if (BlendInfo.GetTopR(blend) != (char)BlendType.BLEND_NONE && !eq.IsColorEqual(e, g))
             {
                 doLineBlend = false;
             }
-            else if (BlendInfo.GetBottomL(blend) != (char)BlendType.BLEND_NONE && !eq._(e, c))
+            else if (BlendInfo.GetBottomL(blend) != (char)BlendType.BLEND_NONE && !eq.IsColorEqual(e, c))
             {
                 doLineBlend = false;
             }
             //no full blending for L-shapes; blend corner only (handles "mario mushroom eyes")
-            else if (eq._(g, h) && eq._(h, i) && eq._(i, f) && eq._(f, c) && !eq._(e, i))
+            else if (eq.IsColorEqual(g, h) && eq.IsColorEqual(h, i) && eq.IsColorEqual(i, f) && eq.IsColorEqual(f, c) && !eq.IsColorEqual(e, i))
             {
                 doLineBlend = false;
             }
@@ -170,7 +171,7 @@ namespace xBRZ.NET
             }
 
             //choose most similar color
-            var px = dist._(e, f) <= dist._(e, h) ? f : h;
+            var px = dist.DistYCbCr(e, f) <= dist.DistYCbCr(e, h) ? f : h;
 
             var out_ = _outputMatrix;
             out_.Move(rotDeg, trgi);
@@ -183,8 +184,8 @@ namespace xBRZ.NET
 
             //test sample: 70% of values max(fg, hc) / min(fg, hc)
             //are between 1.1 and 3.7 with median being 1.9
-             var fg = dist._(f, g);
-             var hc = dist._(h, c);
+             var fg = dist.DistYCbCr(f, g);
+             var hc = dist.DistYCbCr(h, c);
 
              var haveShallowLine = _cfg.SteepDirectionThreshold * fg <= hc && e != g && d != g;
              var haveSteepLine = _cfg.SteepDirectionThreshold * hc <= fg && e != c && b != c;
@@ -227,8 +228,6 @@ namespace xBRZ.NET
             var preProcBuffer = new char[srcWidth];
 
             var ker4 = new Kernel_4x4();
-
-            _preProcessCornersColorDist = new PreProcessCornersDist(_cfg);
 
             //initialize preprocessing buffer for first row:
             //detect upper left and right corner blending
@@ -287,9 +286,6 @@ namespace xBRZ.NET
                     }
                 }
             }
-
-            _scalePixelColorEq = new ScalePixelEq(_cfg);
-            _scalePixelColorDist = new ScalePixelDist(_cfg);
 
             _outputMatrix = new OutputMatrix(_scaleSize.Size, trg, trgWidth);
 

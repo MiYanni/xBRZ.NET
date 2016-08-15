@@ -11,15 +11,11 @@ namespace xBRZ.NET
             new Scaler4x(),
             new Scaler5x()
         };
-        //Times2(Scaler2x),
-        //Times3(Scaler3x),
-        //Times4(Scaler4x),
-        //Times5(Scaler5x)
 
         public ScaleSize(IScaler scaler)
         {
             Scaler = scaler;
-            Size = scaler.Scale();
+            Size = scaler.Scale;
         }
 
         // MJY: Changed return type to IScaler since ScaleSize is not an IScaler anymore.
@@ -30,7 +26,7 @@ namespace xBRZ.NET
             return Values[ord2];
         }
 
-        public IScaler Scaler;
-        public int Size;
+        public IScaler Scaler { get; }
+        public int Size { get; }
     }
 }

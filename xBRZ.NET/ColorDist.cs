@@ -1,21 +1,18 @@
 ﻿namespace xBRZ.NET
 {
-    internal class ColorBase
+    internal class ColorDist
     {
         protected readonly ScalerCfg Cfg;
 
-        public ColorBase(ScalerCfg cfg)
+        public ColorDist(ScalerCfg cfg)
         {
             Cfg = cfg;
         }
 
-        protected static double ColorDist(int pix1, int pix2, double luminanceWeight)
+        public double DistYCbCr(int pix1, int pix2)
         {
-            return pix1 == pix2 ? 0 : DistYCbCr(pix1, pix2, luminanceWeight);
-        }
+            if (pix1 == pix2) return 0;
 
-        private static double DistYCbCr(int pix1, int pix2, double lumaWeight)
-        {
             //http://en.wikipedia.org/wiki/YCbCr#ITU-R_BT.601_conversion
             //YCbCr conversion is a matrix multiplication => take advantage of linearity by subtracting first!
             var r_diff = ((pix1 & Common.RedMask) - (pix2 & Common.RedMask)) >> 16; //we may delay division by 255 to after matrix multiplication
@@ -37,7 +34,7 @@
             // Also skip square root here by pre-squaring the
             // config option equalColorTolerance.
             //return Math.sqrt(square(lumaWeight * y) + square(c_b) + square(c_r));
-            return Common.Square(lumaWeight * y) + Common.Square(c_b) + Common.Square(c_r);
+            return Common.Square(Cfg.LuminanceWeight * y) + Common.Square(c_b) + Common.Square(c_r);
         }
     }
 }

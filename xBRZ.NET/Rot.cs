@@ -45,7 +45,7 @@
             {
                 for (var x = 0; x < 9; x++)
                 {
-                    _[(x << 2) + rotDeg] = rotation[rotDeg][x];
+                    _[(x * 4) + rotDeg] = rotation[rotDeg][x];
                 }
             }
         }
