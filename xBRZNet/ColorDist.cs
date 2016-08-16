@@ -1,4 +1,6 @@
-﻿namespace xBRZNet
+﻿using System;
+
+namespace xBRZNet
 {
     internal class ColorDist
     {
@@ -31,9 +33,8 @@
             var cR = scaleR * (rDiff - y);
 
             // Skip division by 255.
-            // Also skip square root here by pre-squaring the
-            // config option equalColorTolerance.
-            return (Cfg.LuminanceWeight * y).Square() + cB.Square() + cR.Square();
+            // Also skip square root here by pre-squaring the config option equalColorTolerance.
+            return Math.Pow(Cfg.LuminanceWeight * y, 2) + Math.Pow(cB, 2) + Math.Pow(cR, 2);
         }
     }
 }

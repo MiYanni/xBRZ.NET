@@ -1,4 +1,6 @@
-﻿namespace xBRZNet
+﻿using System;
+
+namespace xBRZNet
 {
     internal class ColorEq : ColorDist
     {
@@ -6,7 +8,7 @@
 
         public bool IsColorEqual(int color1, int color2)
         {
-            var eqColorThres = Cfg.EqualColorTolerance.Square();
+            var eqColorThres = Math.Pow(Cfg.EqualColorTolerance, 2);
             return DistYCbCr(color1, color2) < eqColorThres;
         }
     }

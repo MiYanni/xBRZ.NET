@@ -41,11 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlendInfo.cs" />
-    <Compile Include="BlendResult.cs" />
-    <Compile Include="BlendType.cs" />
+    <Compile Include="Blend\BlendInfo.cs" />
+    <Compile Include="Blend\BlendResult.cs" />
+    <Compile Include="Blend\BlendType.cs" />
     <Compile Include="ColorDist.cs" />
-    <Compile Include="Common.cs" />
     <Compile Include="Extensions\BitmapExtensions.cs" />
     <Compile Include="IntPair.cs" />
     <Compile Include="IntPtr.cs" />
@@ -58,7 +57,7 @@
     <Compile Include="RotationDegree.cs" />
     <Compile Include="ColorEq.cs" />
     <Compile Include="ScalerCfg.cs" />
-    <Compile Include="Scalers.cs" />
+    <Compile Include="ScalerImplementations.cs" />
     <Compile Include="ScaleSize.cs" />
     <Compile Include="xBRZScaler.cs" />
   </ItemGroup>
