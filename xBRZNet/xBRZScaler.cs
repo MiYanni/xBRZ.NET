@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using xBRZNet.Blend;
+using xBRZNet.Color;
+using xBRZNet.Common;
 using xBRZNet.Extensions;
+using xBRZNet.Scalers;
 
 namespace xBRZNet
 {

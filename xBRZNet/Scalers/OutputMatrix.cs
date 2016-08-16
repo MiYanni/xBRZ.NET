@@ -1,4 +1,6 @@
-﻿namespace xBRZNet
+﻿using xBRZNet.Common;
+
+namespace xBRZNet.Scalers
 {
     //access matrix area, top-left at position "out" for image with given width
     public class OutputMatrix

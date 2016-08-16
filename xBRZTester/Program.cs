@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using xBRZNet;
+using xBRZNet.Scalers;
 
 namespace xBRZTester
 {

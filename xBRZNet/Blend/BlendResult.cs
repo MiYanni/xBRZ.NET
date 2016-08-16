@@ -1,4 +1,4 @@
-﻿namespace xBRZNet
+﻿namespace xBRZNet.Blend
 {
     internal class BlendResult
     {

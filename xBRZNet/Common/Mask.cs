@@ -1,4 +1,4 @@
-﻿namespace xBRZNet
+﻿namespace xBRZNet.Common
 {
     internal class Mask
     {

@@ -1,4 +1,6 @@
-﻿namespace xBRZNet
+﻿using xBRZNet.Common;
+
+namespace xBRZNet.Scalers
 {
     public interface IScaler
     {

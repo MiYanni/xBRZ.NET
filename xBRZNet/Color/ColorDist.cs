@@ -1,6 +1,8 @@
 ﻿using System;
+using xBRZNet.Common;
+using xBRZNet.Scalers;
 
-namespace xBRZNet
+namespace xBRZNet.Color
 {
     internal class ColorDist
     {

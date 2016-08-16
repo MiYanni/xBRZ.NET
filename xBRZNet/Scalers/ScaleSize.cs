@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace xBRZNet
+namespace xBRZNet.Scalers
 {
     public class ScaleSize
     {
