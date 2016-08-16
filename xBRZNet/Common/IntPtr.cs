@@ -1,6 +1,6 @@
 ﻿namespace xBRZNet.Common
 {
-    public class IntPtr
+    internal class IntPtr
     {
         private readonly int[] _array;
         private int _ptr;

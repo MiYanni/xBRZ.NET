@@ -52,11 +52,11 @@
     <Compile Include="Common\RotationDegree.cs" />
     <Compile Include="Extensions\BitmapExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScalerCfg.cs" />
     <Compile Include="Scalers\Kernel3x3.cs" />
     <Compile Include="Scalers\Kernel4x4.cs" />
     <Compile Include="Scalers\OutputMatrix.cs" />
     <Compile Include="Scalers\Rot.cs" />
-    <Compile Include="Scalers\ScalerCfg.cs" />
     <Compile Include="Scalers\ScalerImplementations.cs" />
     <Compile Include="Scalers\ScaleSize.cs" />
     <Compile Include="xBRZScaler.cs" />

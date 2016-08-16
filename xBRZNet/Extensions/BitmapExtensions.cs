@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace xBRZNet.Extensions
 {
-    public static class BitmapExtensions
+    internal static class BitmapExtensions
     {
         //http://stackoverflow.com/a/2016509/294804
         public static Bitmap ChangeFormat(this Bitmap image, PixelFormat format)

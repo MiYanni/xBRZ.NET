@@ -3,7 +3,7 @@
 namespace xBRZNet.Scalers
 {
     //access matrix area, top-left at position "out" for image with given width
-    public class OutputMatrix
+    internal class OutputMatrix
     {
         private readonly IntPtr _out;
         private readonly int _outWidth;

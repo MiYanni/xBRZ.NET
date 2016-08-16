@@ -53,24 +53,25 @@ namespace xBRZNet
     // ReSharper disable once InconsistentNaming
     public class xBRZScaler
     {
-        public Bitmap ScaleImage(Bitmap image, ScaleSize size, ScalerCfg config = null)
+        // scaleSize = 2 to 5
+        public Bitmap ScaleImage(Bitmap image, int scaleSize, ScalerCfg config = null)
         {
             config = config ?? new ScalerCfg();
 
             var fixedFormatImage = image.ChangeFormat(PixelFormat.Format32bppRgb);
             var rgbValues = fixedFormatImage.ToIntArray();
 
-            var scaleFactor = size.Size;
+            var scaleFactor = scaleSize;
             var scaledRbgValues = new int[rgbValues.Length * (scaleFactor * scaleFactor)];
 
-            ScaleImage(size, rgbValues, scaledRbgValues, fixedFormatImage.Width, fixedFormatImage.Height, config, 0, int.MaxValue);
+            ScaleImage(scaleSize, rgbValues, scaledRbgValues, fixedFormatImage.Width, fixedFormatImage.Height, config, 0, int.MaxValue);
 
             return scaledRbgValues.ToBitmap(fixedFormatImage.Width * scaleFactor, fixedFormatImage.Height * scaleFactor, fixedFormatImage.PixelFormat);
         }
 
-        public void ScaleImage(ScaleSize scaleSize, int[] src, int[] trg, int srcWidth, int srcHeight, ScalerCfg cfg, int yFirst, int yLast)
+        public void ScaleImage(int scaleSize, int[] src, int[] trg, int srcWidth, int srcHeight, ScalerCfg cfg, int yFirst, int yLast)
         {
-            _scaleSize = scaleSize;
+            _scaler = scaleSize.ToIScaler();
             _cfg = cfg;
             _colorDistance = new ColorDist(_cfg);
             _colorEqualizer = new ColorEq(_cfg);
@@ -78,7 +79,7 @@ namespace xBRZNet
         }
 
         private ScalerCfg _cfg;
-        private ScaleSize _scaleSize;
+        private IScaler _scaler;
         private OutputMatrix _outputMatrix;
         private readonly BlendResult _blendResult = new BlendResult();
 
@@ -245,7 +246,7 @@ namespace xBRZNet
 
             if (yFirst >= yLast || srcWidth <= 0) return;
 
-            var trgWidth = srcWidth * _scaleSize.Size;
+            var trgWidth = srcWidth * _scaler.Scale;
 
             //temporary buffer for "on the fly preprocessing"
             var preProcBuffer = new char[srcWidth];
@@ -310,14 +311,14 @@ namespace xBRZNet
                 }
             }
 
-            _outputMatrix = new OutputMatrix(_scaleSize.Size, trg, trgWidth);
+            _outputMatrix = new OutputMatrix(_scaler.Scale, trg, trgWidth);
 
             var ker3 = new Kernel3x3();
 
             for (var y = yFirst; y<yLast; ++y)
             {
                 //consider MT "striped" access
-                var trgi = _scaleSize.Size * y * trgWidth;
+                var trgi = _scaler.Scale * y * trgWidth;
 
                 var sM1 = srcWidth * Math.Max(y - 1, 0);
                 var s0 = srcWidth * y; //center line
@@ -326,7 +327,7 @@ namespace xBRZNet
 
                 var blendXy1 = (char)0;
 
-                for (var x = 0; x < srcWidth; ++x, trgi += _scaleSize.Size)
+                for (var x = 0; x < srcWidth; ++x, trgi += _scaler.Scale)
                 {
                     var xM1 = Math.Max(x - 1, 0);
                     var xP1 = Math.Min(x + 1, srcWidth - 1);
@@ -389,7 +390,7 @@ namespace xBRZNet
                     //fill block of size scale * scale with the given color
                     //  //place *after* preprocessing step, to not overwrite the
                     //  //results while processing the the last pixel!
-                    FillBlock(trg, trgi, trgWidth, src[s0 + x], _scaleSize.Size);
+                    FillBlock(trg, trgi, trgWidth, src[s0 + x], _scaler.Scale);
 
                     //blend four corners of current pixel
                     if (blendXy == 0) continue;
@@ -409,10 +410,10 @@ namespace xBRZNet
                     ker3._[h] = src[sP1 + x];
                     ker3._[i] = src[sP1 + xP1];
 
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R0, ker3, trgi, blendXy);
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R90, ker3, trgi, blendXy);
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R180, ker3, trgi, blendXy);
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R270, ker3, trgi, blendXy);
+                    ScalePixel(_scaler, (int)RotationDegree.R0, ker3, trgi, blendXy);
+                    ScalePixel(_scaler, (int)RotationDegree.R90, ker3, trgi, blendXy);
+                    ScalePixel(_scaler, (int)RotationDegree.R180, ker3, trgi, blendXy);
+                    ScalePixel(_scaler, (int)RotationDegree.R270, ker3, trgi, blendXy);
                }
             }
         }

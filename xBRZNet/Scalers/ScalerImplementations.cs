@@ -2,7 +2,7 @@
 
 namespace xBRZNet.Scalers
 {
-    public interface IScaler
+    internal interface IScaler
     {
         int Scale { get; }
         void BlendLineSteep(int col, OutputMatrix out_);
@@ -12,9 +12,9 @@ namespace xBRZNet.Scalers
         void BlendCorner(int col, OutputMatrix out_);
     }
 
-    public abstract class ScalerBase
+    internal abstract class ScalerBase
     {
-        internal static void AlphaBlend(int n, int m, IntPtr dstPtr, int col)
+        protected static void AlphaBlend(int n, int m, IntPtr dstPtr, int col)
         {
             //assert n < 256 : "possible overflow of (col & redMask) * N";
             //assert m < 256 : "possible overflow of (col & redMask) * N + (dst & redMask) * (M - N)";
@@ -39,7 +39,7 @@ namespace xBRZNet.Scalers
         }
     }
 
-    public class Scaler2x : ScalerBase, IScaler
+    internal class Scaler2X : ScalerBase, IScaler
     {
         public int Scale { get; } = 2;
 
@@ -74,7 +74,7 @@ namespace xBRZNet.Scalers
         }
     }
 
-    public class Scaler3x : ScalerBase, IScaler
+    internal class Scaler3X : ScalerBase, IScaler
     {
         public int Scale { get; } = 3;
 
@@ -119,7 +119,7 @@ namespace xBRZNet.Scalers
         }
     }
 
-    public class Scaler4x : ScalerBase, IScaler
+    internal class Scaler4X : ScalerBase, IScaler
     {
         public int Scale { get; } = 4;
 
@@ -171,7 +171,7 @@ namespace xBRZNet.Scalers
         }
     }
 
-    public class Scaler5x : ScalerBase, IScaler
+    internal class Scaler5X : ScalerBase, IScaler
     {
         public int Scale { get; } = 5;
 

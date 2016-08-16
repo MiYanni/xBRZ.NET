@@ -1,32 +1,22 @@
 ﻿using System;
+using System.Linq;
 
 namespace xBRZNet.Scalers
 {
-    public class ScaleSize
+    internal static class ScaleSize
     {
-        private static readonly IScaler[] Values =
+        private static readonly IScaler[] Scalers =
         {
-            new Scaler2x(),
-            new Scaler3x(),
-            new Scaler4x(),
-            new Scaler5x()
+            new Scaler2X(),
+            new Scaler3X(),
+            new Scaler4X(),
+            new Scaler5X()
         };
 
-        public ScaleSize(IScaler scaler)
+        public static IScaler ToIScaler(this int scaleSize)
         {
-            Scaler = scaler;
-            Size = scaler.Scale;
+            // MJY: Need value checks to assure scaleSize is between 2-5 inclusive.
+            return Scalers.Single(s => s.Scale == scaleSize);
         }
-
-        // MJY: Changed return type to IScaler since ScaleSize is not an IScaler anymore.
-        public static IScaler Cast(int ordinal)
-        {
-            var ord1 = Math.Max(ordinal, 0);
-            var ord2 = Math.Min(ord1, Values.Length - 1);
-            return Values[ord2];
-        }
-
-        public IScaler Scaler { get; }
-        public int Size { get; }
     }
 }

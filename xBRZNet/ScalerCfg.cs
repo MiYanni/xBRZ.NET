@@ -1,4 +1,4 @@
-﻿namespace xBRZNet.Scalers
+﻿namespace xBRZNet
 {
     public class ScalerCfg
     {
