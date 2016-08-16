@@ -2,12 +2,12 @@
 {
     public class IntPtr
     {
-        private int[] _arr;
+        private readonly int[] _array;
         private int _ptr;
 
-        public IntPtr(int[] intArray)
+        public IntPtr(int[] array)
         {
-            _arr = intArray;
+            _array = array;
         }
 
         public void Position(int position)
@@ -17,12 +17,12 @@
 
         public int Get()
         {
-            return _arr[_ptr];
+            return _array[_ptr];
         }
 
         public void Set(int val)
         {
-            _arr[_ptr] = val;
+            _array[_ptr] = val;
         }
     }
 }

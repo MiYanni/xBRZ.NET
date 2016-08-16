@@ -3,9 +3,9 @@
     //clock-wise
     internal enum RotationDegree
     {
-        ROT_0 = 0,
-        ROT_90 = 1,
-        ROT_180 = 2,
-        ROT_270 = 3
+        R0 = 0,
+        R90 = 1,
+        R180 = 2,
+        R270 = 3
     }
 }

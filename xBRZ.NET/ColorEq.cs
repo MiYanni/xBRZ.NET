@@ -6,7 +6,7 @@
 
         public bool IsColorEqual(int color1, int color2)
         {
-            var eqColorThres = Common.Square(Cfg.EqualColorTolerance);
+            var eqColorThres = Cfg.EqualColorTolerance.Square();
             return DistYCbCr(color1, color2) < eqColorThres;
         }
     }

@@ -20,9 +20,9 @@
 
             //this works because 8 upper bits are free
             var dst = dstPtr.Get();
-            var redComponent = BlendComponent(Common.RedMask, n, m, dst, col);
-            var greenComponent = BlendComponent(Common.GreenMask, n, m, dst, col);
-            var blueComponent = BlendComponent(Common.BlueMask, n, m, dst, col);
+            var redComponent = BlendComponent(Mask.Red, n, m, dst, col);
+            var greenComponent = BlendComponent(Mask.Green, n, m, dst, col);
+            var blueComponent = BlendComponent(Mask.Blue, n, m, dst, col);
             var blend = (redComponent | greenComponent | blueComponent);
             dstPtr.Set((int)(blend | 0xff000000)); // MJY: Added required cast but will throw an exception if the asserts at the top are not checked.
         }

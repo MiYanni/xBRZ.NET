@@ -75,40 +75,40 @@ namespace xBRZ.NET
         }
 
         //detect blend direction
-        private void PreProcessCorners( Kernel_4x4 ker)
+        private void PreProcessCorners( Kernel4x4 ker)
         {
             _blendResult.Reset();
 
-            if ((ker.f == ker.g && ker.j == ker.k) || (ker.f == ker.j && ker.g == ker.k)) return;
+            if ((ker.F == ker.G && ker.J == ker.K) || (ker.F == ker.J && ker.G == ker.K)) return;
 
             var dist = _colorDistance;
             
-            var weight = 4;
-            var jg = dist.DistYCbCr(ker.i, ker.f) + dist.DistYCbCr(ker.f, ker.c) + dist.DistYCbCr(ker.n, ker.k) + dist.DistYCbCr(ker.k, ker.h) + weight * dist.DistYCbCr(ker.j, ker.g);
-            var fk = dist.DistYCbCr(ker.e, ker.j) + dist.DistYCbCr(ker.j, ker.o) + dist.DistYCbCr(ker.b, ker.g) + dist.DistYCbCr(ker.g, ker.l) + weight * dist.DistYCbCr(ker.f, ker.k);
+            const int weight = 4;
+            var jg = dist.DistYCbCr(ker.I, ker.F) + dist.DistYCbCr(ker.F, ker.C) + dist.DistYCbCr(ker.N, ker.K) + dist.DistYCbCr(ker.K, ker.H) + weight * dist.DistYCbCr(ker.J, ker.G);
+            var fk = dist.DistYCbCr(ker.E, ker.J) + dist.DistYCbCr(ker.J, ker.O) + dist.DistYCbCr(ker.B, ker.G) + dist.DistYCbCr(ker.G, ker.L) + weight * dist.DistYCbCr(ker.F, ker.K);
 
             if (jg < fk)
             {
                 var dominantGradient = _cfg.DominantDirectionThreshold * jg < fk;
-                if (ker.f != ker.g && ker.f != ker.j)
+                if (ker.F != ker.G && ker.F != ker.J)
                 {
-                    _blendResult.f = (char)(dominantGradient ? BlendType.BLEND_DOMINANT : BlendType.BLEND_NORMAL);
+                    _blendResult.F = (char)(dominantGradient ? BlendType.Dominant : BlendType.Normal);
                 }
-                if (ker.k != ker.j && ker.k != ker.g)
+                if (ker.K != ker.J && ker.K != ker.G)
                 {
-                    _blendResult.k = (char)(dominantGradient ? BlendType.BLEND_DOMINANT : BlendType.BLEND_NORMAL);
+                    _blendResult.K = (char)(dominantGradient ? BlendType.Dominant : BlendType.Normal);
                 }
             }
             else if (fk < jg)
             {
                 var dominantGradient = _cfg.DominantDirectionThreshold * fk < jg;
-                if (ker.j != ker.f && ker.j != ker.k)
+                if (ker.J != ker.F && ker.J != ker.K)
                 {
-                    _blendResult.j = (char)(dominantGradient ? BlendType.BLEND_DOMINANT : BlendType.BLEND_NORMAL);
+                    _blendResult.J = (char)(dominantGradient ? BlendType.Dominant : BlendType.Normal);
                 }
-                if (ker.g != ker.f && ker.g != ker.k)
+                if (ker.G != ker.F && ker.G != ker.K)
                 {
-                    _blendResult.g = (char)(dominantGradient ? BlendType.BLEND_DOMINANT : BlendType.BLEND_NORMAL);
+                    _blendResult.G = (char)(dominantGradient ? BlendType.Dominant : BlendType.Normal);
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace xBRZ.NET
             -------------
             blendInfo: result of preprocessing all four corners of pixel "e"
         */
-        private void ScalePixel(IScaler scaler, int rotDeg, Kernel_3x3 ker, int[] trg, int trgi, int trgWidth, char blendInfo)
+        private void ScalePixel(IScaler scaler, int rotDeg, Kernel3x3 ker, int trgi, char blendInfo)
         {
             // int a = ker._[Rot._[(0 << 2) + rotDeg]];
             var b = ker._[Rot._[(1 << 2) + rotDeg]];
@@ -136,27 +136,27 @@ namespace xBRZ.NET
             var h = ker._[Rot._[(7 << 2) + rotDeg]];
             var i = ker._[Rot._[(8 << 2) + rotDeg]];
 
-            var blend = BlendInfo.Rotate(blendInfo, (RotationDegree)rotDeg);
+            var blend = blendInfo.Rotate((RotationDegree)rotDeg);
 
-            if ((BlendType)BlendInfo.GetBottomR(blend) == BlendType.BLEND_NONE) return;
+            if ((BlendType)blend.GetBottomR() == BlendType.None) return;
 
             var eq = _colorEqualizer;
             var dist = _colorDistance;
 
             bool doLineBlend;
 
-            if (BlendInfo.GetBottomR(blend) >= (char)BlendType.BLEND_DOMINANT)
+            if (blend.GetBottomR() >= (char)BlendType.Dominant)
             {
                 doLineBlend = true;
             }
             //make sure there is no second blending in an adjacent
             //rotation for this pixel: handles insular pixels, mario eyes
             //but support double-blending for 90� corners
-            else if (BlendInfo.GetTopR(blend) != (char)BlendType.BLEND_NONE && !eq.IsColorEqual(e, g))
+            else if (blend.GetTopR() != (char)BlendType.None && !eq.IsColorEqual(e, g))
             {
                 doLineBlend = false;
             }
-            else if (BlendInfo.GetBottomL(blend) != (char)BlendType.BLEND_NONE && !eq.IsColorEqual(e, c))
+            else if (blend.GetBottomL() != (char)BlendType.None && !eq.IsColorEqual(e, c))
             {
                 doLineBlend = false;
             }
@@ -227,7 +227,7 @@ namespace xBRZ.NET
             //temporary buffer for "on the fly preprocessing"
             var preProcBuffer = new char[srcWidth];
 
-            var ker4 = new Kernel_4x4();
+            var ker4 = new Kernel4x4();
 
             //initialize preprocessing buffer for first row:
             //detect upper left and right corner blending
@@ -237,37 +237,37 @@ namespace xBRZ.NET
             {
                 var y = yFirst - 1;
 
-                var s_m1 = srcWidth * Math.Max(y - 1, 0);
-                var s_0 = srcWidth * y; //center line
-                var s_p1 = srcWidth * Math.Min(y + 1, srcHeight - 1);
-                var s_p2 = srcWidth * Math.Min(y + 2, srcHeight - 1);
+                var sM1 = srcWidth * Math.Max(y - 1, 0);
+                var s0 = srcWidth * y; //center line
+                var sP1 = srcWidth * Math.Min(y + 1, srcHeight - 1);
+                var sP2 = srcWidth * Math.Min(y + 2, srcHeight - 1);
 
                 for (var x = 0; x<srcWidth; ++x)
                 {
-                    var x_m1 = Math.Max(x - 1, 0);
-                    var x_p1 = Math.Min(x + 1, srcWidth - 1);
-                    var x_p2 = Math.Min(x + 2, srcWidth - 1);
+                    var xM1 = Math.Max(x - 1, 0);
+                    var xP1 = Math.Min(x + 1, srcWidth - 1);
+                    var xP2 = Math.Min(x + 2, srcWidth - 1);
 
                     //read sequentially from memory as far as possible
-                    ker4.a = src[s_m1 + x_m1];
-                    ker4.b = src[s_m1 + x];
-                    ker4.c = src[s_m1 + x_p1];
-                    ker4.d = src[s_m1 + x_p2];
+                    ker4.A = src[sM1 + xM1];
+                    ker4.B = src[sM1 + x];
+                    ker4.C = src[sM1 + xP1];
+                    ker4.D = src[sM1 + xP2];
 
-                    ker4.e = src[s_0 + x_m1];
-                    ker4.f = src[s_0 + x];
-                    ker4.g = src[s_0 + x_p1];
-                    ker4.h = src[s_0 + x_p2];
+                    ker4.E = src[s0 + xM1];
+                    ker4.F = src[s0 + x];
+                    ker4.G = src[s0 + xP1];
+                    ker4.H = src[s0 + xP2];
 
-                    ker4.i = src[s_p1 + x_m1];
-                    ker4.j = src[s_p1 + x];
-                    ker4.k = src[s_p1 + x_p1];
-                    ker4.l = src[s_p1 + x_p2];
+                    ker4.I = src[sP1 + xM1];
+                    ker4.J = src[sP1 + x];
+                    ker4.K = src[sP1 + xP1];
+                    ker4.L = src[sP1 + xP2];
 
-                    ker4.m = src[s_p2 + x_m1];
-                    ker4.n = src[s_p2 + x];
-                    ker4.o = src[s_p2 + x_p1];
-                    ker4.p = src[s_p2 + x_p2];
+                    ker4.M = src[sP2 + xM1];
+                    ker4.N = src[sP2 + x];
+                    ker4.O = src[sP2 + xP1];
+                    ker4.P = src[sP2 + xP2];
 
                     PreProcessCorners(ker4); // writes to blendResult
                     /*
@@ -278,63 +278,60 @@ namespace xBRZ.NET
                     | J | K |
                     ---------
                     */
-                    preProcBuffer[x] = BlendInfo.SetTopR(preProcBuffer[x], _blendResult.j);
+                    preProcBuffer[x] = preProcBuffer[x].SetTopR(_blendResult.J);
 
                     if (x + 1 < srcWidth)
                     {
-                        preProcBuffer[x + 1] = BlendInfo.SetTopL(preProcBuffer[x + 1], _blendResult.k);
+                        preProcBuffer[x + 1] = preProcBuffer[x + 1].SetTopL(_blendResult.K);
                     }
                 }
             }
 
             _outputMatrix = new OutputMatrix(_scaleSize.Size, trg, trgWidth);
 
-            var blend_xy = (char)0;
-            var blend_xy1 = (char)0;
-
-            var ker3 = new Kernel_3x3();
+            var ker3 = new Kernel3x3();
 
             for (var y = yFirst; y<yLast; ++y)
             {
                 //consider MT "striped" access
                 var trgi = _scaleSize.Size * y * trgWidth;
 
-                var s_m1 = srcWidth * Math.Max(y - 1, 0);
-                var s_0 = srcWidth * y; //center line
-                var s_p1 = srcWidth * Math.Min(y + 1, srcHeight - 1);
-                var s_p2 = srcWidth * Math.Min(y + 2, srcHeight - 1);
+                var sM1 = srcWidth * Math.Max(y - 1, 0);
+                var s0 = srcWidth * y; //center line
+                var sP1 = srcWidth * Math.Min(y + 1, srcHeight - 1);
+                var sP2 = srcWidth * Math.Min(y + 2, srcHeight - 1);
 
-                blend_xy1 = (char)0; //corner blending for current (x, y + 1) position
+                var blendXy1 = (char)0;
 
                 for (var x = 0; x < srcWidth; ++x, trgi += _scaleSize.Size)
                 {
-                    var x_m1 = Math.Max(x - 1, 0);
-                    var x_p1 = Math.Min(x + 1, srcWidth - 1);
-                    var x_p2 = Math.Min(x + 2, srcWidth - 1);
+                    var xM1 = Math.Max(x - 1, 0);
+                    var xP1 = Math.Min(x + 1, srcWidth - 1);
+                    var xP2 = Math.Min(x + 2, srcWidth - 1);
 
                     //evaluate the four corners on bottom-right of current pixel
                     //blend_xy for current (x, y) position
                     
                     //read sequentially from memory as far as possible
-                    ker4.a = src[s_m1 + x_m1];
-                    ker4.b = src[s_m1 + x];
-                    ker4.c = src[s_m1 + x_p1];
-                    ker4.d = src[s_m1 + x_p2];
+                    ker4.A = src[sM1 + xM1];
+                    ker4.B = src[sM1 + x];
+                    ker4.C = src[sM1 + xP1];
+                    ker4.D = src[sM1 + xP2];
 
-                    ker4.e = src[s_0 + x_m1];
-                    ker4.f = src[s_0 + x];
-                    ker4.g = src[s_0 + x_p1];
-                    ker4.h = src[s_0 + x_p2];
+                    ker4.E = src[s0 + xM1];
+                    ker4.F = src[s0 + x];
+                    ker4.G = src[s0 + xP1];
+                    ker4.H = src[s0 + xP2];
 
-                    ker4.i = src[s_p1 + x_m1];
-                    ker4.j = src[s_p1 + x];
-                    ker4.k = src[s_p1 + x_p1];
-                    ker4.l = src[s_p1 + x_p2];
+                    ker4.I = src[sP1 + xM1];
+                    ker4.J = src[sP1 + x];
+                    ker4.K = src[sP1 + xP1];
+                    ker4.L = src[sP1 + xP2];
 
-                    ker4.m = src[s_p2 + x_m1];
-                    ker4.n = src[s_p2 + x];
-                    ker4.o = src[s_p2 + x_p1];
-                    ker4.p = src[s_p2 + x_p2];
+                    ker4.M = src[sP2 + xM1];
+                    ker4.N = src[sP2 + x];
+                    ker4.O = src[sP2 + xP1];
+                    ker4.P = src[sP2 + xP2];
 
                     PreProcessCorners(ker4); // writes to blendResult
 
@@ -349,50 +346,50 @@ namespace xBRZ.NET
 
                     //all four corners of (x, y) have been determined at
                     //this point due to processing sequence!
-                    blend_xy = BlendInfo.SetBottomR(preProcBuffer[x], _blendResult.f);
+                    var blendXy = preProcBuffer[x].SetBottomR(_blendResult.F);
 
                     //set 2nd known corner for (x, y + 1)
-                    blend_xy1 = BlendInfo.SetTopR(blend_xy1, _blendResult.j);
+                    blendXy1 = blendXy1.SetTopR(_blendResult.J);
                     //store on current buffer position for use on next row
-                    preProcBuffer[x] = blend_xy1;
+                    preProcBuffer[x] = blendXy1;
 
                     //set 1st known corner for (x + 1, y + 1) and
                     //buffer for use on next column
-                    blend_xy1 = BlendInfo.SetTopL((char)0, _blendResult.k);
+                    blendXy1 = ((char)0).SetTopL(_blendResult.K);
 
                     if (x + 1 < srcWidth)
                     {
                         //set 3rd known corner for (x + 1, y)
-                        preProcBuffer[x + 1] = BlendInfo.SetBottomL(preProcBuffer[x + 1], _blendResult.g);
+                        preProcBuffer[x + 1] = preProcBuffer[x + 1].SetBottomL(_blendResult.G);
                     }
 
                     //fill block of size scale * scale with the given color
                     //  //place *after* preprocessing step, to not overwrite the
                     //  //results while processing the the last pixel!
-                    FillBlock(trg, trgi, trgWidth, src[s_0 + x], _scaleSize.Size);
+                    FillBlock(trg, trgi, trgWidth, src[s0 + x], _scaleSize.Size);
 
                     //blend four corners of current pixel
-                    if (blend_xy == 0) continue;
+                    if (blendXy == 0) continue;
 
                     const int a = 0, b = 1, c = 2, d = 3, e = 4, f = 5, g = 6, h = 7, i = 8;
 
                     //read sequentially from memory as far as possible
-                    ker3._[a] = src[s_m1 + x_m1];
-                    ker3._[b] = src[s_m1 + x];
-                    ker3._[c] = src[s_m1 + x_p1];
+                    ker3._[a] = src[sM1 + xM1];
+                    ker3._[b] = src[sM1 + x];
+                    ker3._[c] = src[sM1 + xP1];
 
-                    ker3._[d] = src[s_0 + x_m1];
-                    ker3._[e] = src[s_0 + x];
-                    ker3._[f] = src[s_0 + x_p1];
+                    ker3._[d] = src[s0 + xM1];
+                    ker3._[e] = src[s0 + x];
+                    ker3._[f] = src[s0 + xP1];
 
-                    ker3._[g] = src[s_p1 + x_m1];
-                    ker3._[h] = src[s_p1 + x];
-                    ker3._[i] = src[s_p1 + x_p1];
+                    ker3._[g] = src[sP1 + xM1];
+                    ker3._[h] = src[sP1 + x];
+                    ker3._[i] = src[sP1 + xP1];
 
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.ROT_0, ker3, trg, trgi, trgWidth, blend_xy);
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.ROT_90, ker3, trg, trgi, trgWidth, blend_xy);
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.ROT_180, ker3, trg, trgi, trgWidth, blend_xy);
-                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.ROT_270, ker3, trg, trgi, trgWidth, blend_xy);
+                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R0, ker3, trgi, blendXy);
+                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R90, ker3, trgi, blendXy);
+                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R180, ker3, trgi, blendXy);
+                    ScalePixel(_scaleSize.Scaler, (int)RotationDegree.R270, ker3, trgi, blendXy);
                }
             }
         }

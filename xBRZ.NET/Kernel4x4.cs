@@ -12,11 +12,11 @@
         | M | N | O | P |
         -----------------
     */
-    internal class Kernel_4x4
+    internal class Kernel4x4
     {
-        public int a, b, c, d;
-        public int e, f, g, h;
-        public int i, j, k, l;
-        public int m, n, o, p;
+        public int A, B, C, D;
+        public int E, F, G, H;
+        public int I, J, K, L;
+        public int M, N, O, P;
     }
 }

@@ -2,25 +2,22 @@
 {
     internal static class Common
     {
-        public static readonly int RedMask = 0xff0000;
-        public static readonly int GreenMask = 0x00ff00;
-        public static readonly int BlueMask = 0x0000ff;
-
-        public static readonly int MaxRots = 4; // Number of 90 degree rotations
-        public static readonly int MaxScale = 5; // Highest possible scale
-        public static readonly int MaxScaleSq = MaxScale * MaxScale;
+        public const int MaxRotations = 4; // Number of 90 degree rotations
+        public const int MaxPositions = 9;
+        public const int MaxScale = 5; // Highest possible scale
+        public const int MaxScaleSquared = MaxScale * MaxScale;
 
         //calculate input matrix coordinates after rotation at program startup
         public static readonly IntPair[] MatrixRotation;
 
         static Common()
         {
-            MatrixRotation = new IntPair[(MaxScale - 1) * MaxScaleSq * MaxRots];
+            MatrixRotation = new IntPair[(MaxScale - 1) * MaxScaleSquared * MaxRotations];
             for (var n = 2; n < MaxScale + 1; n++)
             {
-                for (var r = 0; r < MaxRots; r++)
+                for (var r = 0; r < MaxRotations; r++)
                 {
-                    var nr = (n - 2) * (MaxRots * MaxScaleSq) + r * MaxScaleSq;
+                    var nr = (n - 2) * (MaxRotations * MaxScaleSquared) + r * MaxScaleSquared;
                     for (var i = 0; i < MaxScale; i++)
                     {
                         for (var j = 0; j < MaxScale; j++)
@@ -32,28 +29,28 @@
             }
         }
 
-        private static IntPair BuildMatrixRotation(int rotDeg, int I, int J, int N)
+        private static IntPair BuildMatrixRotation(int rotDeg, int i, int j, int n)
         {
-            int I_old, J_old;
+            int iOld, jOld;
 
             if (rotDeg == 0)
             {
-                I_old = I;
-                J_old = J;
+                iOld = i;
+                jOld = j;
 
             }
             else
             {
                 //old coordinates before rotation!
-                var old = BuildMatrixRotation(rotDeg - 1, I, J, N);
-                I_old = N - 1 - old.J;
-                J_old = old.I;
+                var old = BuildMatrixRotation(rotDeg - 1, i, j, n);
+                iOld = n - 1 - old.J;
+                jOld = old.I;
             }
 
-            return new IntPair(I_old, J_old);
+            return new IntPair(iOld, jOld);
         }
 
-        public static double Square(double value)
+        public static double Square(this double value)
         {
             return value * value;
         }

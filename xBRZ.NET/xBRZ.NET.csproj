@@ -47,8 +47,9 @@
     <Compile Include="Common.cs" />
     <Compile Include="IntPair.cs" />
     <Compile Include="IntPtr.cs" />
-    <Compile Include="Kernel_3x3.cs" />
-    <Compile Include="Kernel_4x4.cs" />
+    <Compile Include="Kernel3x3.cs" />
+    <Compile Include="Kernel4x4.cs" />
+    <Compile Include="Mask.cs" />
     <Compile Include="OutputMatrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rot.cs" />

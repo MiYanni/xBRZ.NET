@@ -1,53 +1,45 @@
-﻿namespace xBRZ.NET
+﻿using System;
+using System.Linq;
+
+namespace xBRZ.NET
 {
-    internal class Rot
+    internal static class Rot
     {
         // Cache the 4 rotations of the 9 positions, a to i.
-        public static readonly int[] _ = new int[9 * 4];
+        // a = 0, b = 1, c = 2,
+        // d = 3, e = 4, f = 5,
+        // g = 6, h = 7, i = 8;
+        public static int[] _ { get; } = new int[Common.MaxRotations * Common.MaxPositions];
 
         static Rot()
         {
-            const int a = 0, b = 1, c = 2,
-                    d = 3, e = 4, f = 5,
-                    g = 6, h = 7, i = 8;
-
-            int[] deg0 = 
+            var rotation = Enumerable.Range(0, Common.MaxPositions).ToArray();
+            var sideLength = (int) Math.Sqrt(Common.MaxPositions);
+            for (var rot = 0; rot < Common.MaxRotations; rot++)
             {
-                a,b,c,
-                d,e,f,
-                g,h,i
-            };
-
-            int[] deg90 = 
-            {
-                g,d,a,
-                h,e,b,
-                i,f,c
-            };
-
-            int[] deg180 = 
-            {
-                i,h,g,
-                f,e,d,
-                c,b,a
-            };
-
-            int[] deg270 = 
-            {
-                c,f,i,
-                b,e,h,
-                a,d,g
-            };
-
-            int[][] rotation = {deg0, deg90, deg180, deg270};
-
-            for (var rotDeg = 0; rotDeg < 4; rotDeg++)
-            {
-                for (var x = 0; x < 9; x++)
+                for (var pos = 0; pos < Common.MaxPositions; pos++)
                 {
-                    _[(x * 4) + rotDeg] = rotation[rotDeg][x];
+                    _[(pos * Common.MaxRotations) + rot] = rotation[pos];
+                }
+                rotation = rotation.RotateClockwise(sideLength);
+            }
+        }
+
+        //http://stackoverflow.com/a/38964502/294804
+        private static int[] RotateClockwise(this int[] square1DMatrix, int? sideLength = null)
+        {
+            var size = sideLength ?? (int)Math.Sqrt(square1DMatrix.Length);
+            var result = new int[square1DMatrix.Length];
+
+            for (var i = 0; i < size; ++i)
+            {
+                for (var j = 0; j < size; ++j)
+                {
+                    result[i * size + j] = square1DMatrix[(size - j - 1) * size + i];
                 }
             }
+
+            return result;
         }
     }
 }
