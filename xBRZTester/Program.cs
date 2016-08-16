@@ -11,7 +11,8 @@ namespace xBRZTester
     {
         private static void Main(string[] args)
         {
-            SaveScaledImage();
+            //SaveScaledImage();
+            SaveScaledImage2();
             //Console.ReadKey();
         }
 
@@ -63,7 +64,7 @@ namespace xBRZTester
             const int scaleFactor = 3;
             var scaledRbgValues = new int[numBytes / 4 * (scaleFactor * scaleFactor)];
 
-            var xBrzConv = new xBrzConv();
+            var xBrzConv = new xBRZScaler();
             xBrzConv.ScaleImage(new ScaleSize(new Scaler3x()), rgbValues, scaledRbgValues, fixedFormatImage.Width, fixedFormatImage.Height, new ScalerCfg(), 0, int.MaxValue);
 
             var scaledImage = new Bitmap(fixedFormatImage.Width * scaleFactor, fixedFormatImage.Height * scaleFactor, pxf);
@@ -84,6 +85,20 @@ namespace xBRZTester
             scaledImage.UnlockBits(bmpData);
 
             scaledImage.Save(fileName + "-" + scaleFactor + "xBRZ" + imageExtension, ImageFormat.Png);
+        }
+
+        private static void SaveScaledImage2()
+        {
+            var originalImage = new Bitmap(@"..\..\Images\Chrono Trigger2.png");
+
+            const string fileName = "Image";
+            const string imageExtension = ".png";
+
+            originalImage.Save(fileName + "-orig" + imageExtension, ImageFormat.Png);
+
+            var scaledImage = new xBRZScaler().ScaleImage(originalImage, new ScaleSize(new Scaler3x()));
+
+            scaledImage.Save(fileName + "-" + 3 + "xBRZ" + imageExtension, ImageFormat.Png);
         }
     }
 }
