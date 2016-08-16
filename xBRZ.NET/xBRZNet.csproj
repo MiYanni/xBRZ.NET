@@ -7,8 +7,8 @@
     <ProjectGuid>{84EE293E-B938-4512-8A39-86FFC00ED267}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>xBRZ.NET</RootNamespace>
-    <AssemblyName>xBRZ.NET</AssemblyName>
+    <RootNamespace>xBRZNet</RootNamespace>
+    <AssemblyName>xBRZNet</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

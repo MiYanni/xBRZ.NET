@@ -1,4 +1,4 @@
-﻿namespace xBRZ.NET
+﻿namespace xBRZNet
 {
     internal static class BlendInfo
     {

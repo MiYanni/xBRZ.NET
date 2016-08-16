@@ -1,4 +1,4 @@
-﻿namespace xBRZ.NET
+﻿namespace xBRZNet
 {
     //access matrix area, top-left at position "out" for image with given width
     public class OutputMatrix

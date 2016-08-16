@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using xBRZ.NET;
+using xBRZNet;
 
 namespace xBRZTester
 {

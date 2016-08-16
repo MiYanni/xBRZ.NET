@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xBRZ.NET", "xBRZ.NET\xBRZ.NET.csproj", "{84EE293E-B938-4512-8A39-86FFC00ED267}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xBRZNet", "xBRZ.NET\xBRZNet.csproj", "{84EE293E-B938-4512-8A39-86FFC00ED267}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xBRZTester", "xBRZTester\xBRZTester.csproj", "{0D388C1A-EF27-4B1E-8783-2BA7531D2411}"
 EndProject

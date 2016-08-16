@@ -51,9 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\xBRZ.NET\xBRZ.NET.csproj">
+    <ProjectReference Include="..\xBRZ.NET\xBRZNet.csproj">
       <Project>{84EE293E-B938-4512-8A39-86FFC00ED267}</Project>
-      <Name>xBRZ.NET</Name>
+      <Name>xBRZNet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

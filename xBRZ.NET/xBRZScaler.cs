@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using xBRZ.NET.Extensions;
+using xBRZNet.Extensions;
 
-namespace xBRZ.NET
+namespace xBRZNet
 {
     //http://intrepidis.blogspot.com/2014/02/xbrz-in-java.html
     /*
@@ -48,6 +46,7 @@ namespace xBRZ.NET
         of the xBRZ class.
     */
 
+    // ReSharper disable once InconsistentNaming
     public class xBRZScaler
     {
         public Bitmap ScaleImage(Bitmap image, ScaleSize size, ScalerCfg config = null)

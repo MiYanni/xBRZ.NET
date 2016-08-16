@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace xBRZ.NET.Extensions
+namespace xBRZNet.Extensions
 {
     public static class BitmapExtensions
     {

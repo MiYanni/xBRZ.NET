@@ -1,4 +1,4 @@
-﻿namespace xBRZ.NET
+﻿namespace xBRZNet
 {
     /*
         input kernel area naming convention:
@@ -12,6 +12,7 @@
         | M | N | O | P |
         -----------------
     */
+    // ReSharper disable once InconsistentNaming
     internal class Kernel4x4
     {
         public int A, B, C, D;

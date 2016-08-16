@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace xBRZ.NET
+namespace xBRZNet
 {
     internal static class Rot
     {
