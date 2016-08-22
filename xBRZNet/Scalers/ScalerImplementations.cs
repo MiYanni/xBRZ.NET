@@ -26,7 +26,7 @@ namespace xBRZNet.Scalers
             var greenComponent = BlendComponent(Mask.Green, n, m, dst, col);
             var blueComponent = BlendComponent(Mask.Blue, n, m, dst, col);
             var blend = (redComponent | greenComponent | blueComponent);
-            dstPtr.Set((int)(blend | 0xff000000)); // MJY: Added required cast but will throw an exception if the asserts at the top are not checked.
+            dstPtr.Set(blend | unchecked((int)0xff000000)); // MJY: Added required cast but will throw an exception if the asserts at the top are not checked.
         }
 
         private static int BlendComponent(int mask, int n, int m, int inPixel, int setPixel)
