@@ -16,12 +16,10 @@ namespace xBRZTester
                 Console.WriteLine("\tEx:\txBRZTester.exe 4 C:\\example\\input.png output.png");
                 Console.WriteLine("\nPress any key to exit");
                 Console.ReadKey();
-
+                return;
             }
-            else
-            {
-                SaveScaledImage(Int32.Parse(args[0]), args[1], args[2]);
-            }
+            
+            SaveScaledImage(Int32.Parse(args[0]), args[1], args[2]);
         }
 
         private static void SaveScaledImage(int scaleFactor, string inputPath, string outputPath)
