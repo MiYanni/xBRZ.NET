@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.Security.Permissions;
 using xBRZNet;
 
 namespace xBRZTester
@@ -8,22 +10,23 @@ namespace xBRZTester
     {
         private static void Main(string[] args)
         {
-            SaveScaledImage();
+            if (args.Length != 4)
+            {
+                Console.WriteLine("Usage: xBRZTester.exe ScaleFactor(2-6) InputPath OutputPath");
+                Console.WriteLine("\tEx:\txBRZTester.exe 4 C:\\example\\input.png output.png");
+                Console.WriteLine("\nPress any key to exit");
+                Console.ReadKey();
+                return;
+            }
+            
+            SaveScaledImage(Int32.Parse(args[0]), args[1], args[2]);
         }
 
-        private static void SaveScaledImage()
+        private static void SaveScaledImage(int scaleFactor, string inputPath, string outputPath)
         {
-            var originalImage = new Bitmap(@"..\..\Images\Chrono Trigger2.png");
+            var scaledImage = new xBRZScaler().ScaleImage(new Bitmap(inputPath), scaleFactor);
 
-            const string fileName = "Image";
-            const string imageExtension = ".png";
-
-            originalImage.Save(fileName + "-orig" + imageExtension, ImageFormat.Png);
-
-            const int scaleSize = 3;
-            var scaledImage = new xBRZScaler().ScaleImage(originalImage, scaleSize);
-
-            scaledImage.Save(fileName + "-" + scaleSize + "xBRZ" + imageExtension, ImageFormat.Png);
+            scaledImage.Save(outputPath);
         }
     }
 }
